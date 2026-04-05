@@ -301,9 +301,12 @@ export const fetchRemote = (
 };
 //@ts-ignore
 export const revalidate = async (
-  fetchModule: any = getFetchModule() || (() => {}),
+  fetchModule?: any,
   force: boolean = false,
 ): Promise<boolean> => {
+  if (!fetchModule) {
+    fetchModule = (await getFetchModule()) || (() => {});
+  }
   if (globalThis.moduleGraphDirty) {
     force = true;
   }
@@ -332,7 +335,7 @@ export const revalidate = async (
   });
 };
 
-export function getFetchModule(): any {
+export async function getFetchModule(): Promise<any> {
   //@ts-ignore
   const loadedModule =
     //@ts-ignore
@@ -340,7 +343,6 @@ export function getFetchModule(): any {
   if (loadedModule) {
     return loadedModule;
   }
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const nodeFetch = require('node-fetch');
+  const nodeFetch = await import('node-fetch');
   return nodeFetch.default || nodeFetch;
 }
