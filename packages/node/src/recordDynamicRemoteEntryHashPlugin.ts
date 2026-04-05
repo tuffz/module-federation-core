@@ -28,7 +28,7 @@ const recordDynamicRemoteEntryHashPlugin: () => ModuleFederationRuntimePlugin =
         const hotReloadUtils = await import('./utils/hot-reload');
         const fetcher = hotReloadUtils.createFetcher(
           entry,
-          hotReloadUtils.getFetchModule(),
+          await hotReloadUtils.getFetchModule(),
           name,
           (hash) => {
             hashmap[name] = hash;
